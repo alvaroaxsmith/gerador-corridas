@@ -21,6 +21,16 @@ class RideModel {
       callback(null, { id, status: 'canceled' });
     });
   }
-}
+
+  static getAll(callback) {
+    db.all(`SELECT * FROM rides`, [], (err, rows) => {
+    if (err) {
+    return callback(err);
+    }
+    callback(null, rows);
+    });
+    }
+    }
+
 
 module.exports = RideModel;

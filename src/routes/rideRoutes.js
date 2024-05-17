@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.post('/', RideController.create);
 router.delete('/:id', RideController.cancel);
+router.get('/get', RideController.getAll);
 
 module.exports = router;

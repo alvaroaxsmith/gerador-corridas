@@ -30,6 +30,22 @@ class RideController {
       res.status(500).json({ error: err.message });
     }
   }
+
+  /**
+ * Handler para obter todas as corridas.
+ *
+ * @param {Request} req - O objeto de requisição
+ * @param {Response} res - O objeto de resposta
+ * @return {Promise<void>} Resposta JSON com todas as corridas ou erro
+ */
+  static async getAll(req, res) {
+    try {
+      const rides = await RideService.getAllRides();
+      res.status(200).json(rides);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
 }
 
 module.exports = RideController;

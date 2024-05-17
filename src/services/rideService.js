@@ -32,6 +32,22 @@ class RideService {
       });
     });
   }
+
+  /**
+   * Retorna todas as corridas.
+   *
+   * @return {Promise<Object>} A promessa que resolve todas as corridas
+   */
+  static async getAllRides() {
+    return new Promise((resolve, reject) => {
+      RideModel.getAll((err, rides) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(rides);
+      });
+    });
+  }
 }
 
 module.exports = RideService;
