@@ -1,15 +1,14 @@
-import express, { json } from 'express';
-import { config } from 'dotenv';
-import rideRoutes from './src/routes/rideRoutes.js'; // Add .js if necessary
-
-config();
+import express from 'express';
+import setupSwagger from './src/swagger.js';
+import rideRoutes from './src/routes/rideRoutes.js';
 
 const app = express();
-app.use(json());
 
-app.use('/rides', rideRoutes);  // Assuming rideRoutes is a function or object
+app.use('/rides', rideRoutes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+setupSwagger(app);
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
 });
