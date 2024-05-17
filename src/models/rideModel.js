@@ -1,11 +1,11 @@
-const db = require('../config');
+import { run, all } from '../config.js';
 
 class RideModel {
   static create(user_id, callback) {
     const status = 'active';
     const created_at = new Date().toISOString();
-    db.run(`INSERT INTO rides (user_id, status, created_at) VALUES (?, ?, ?)`,
-      [user_id, status, created_at], function(err) {
+    run(`INSERT INTO rides (user_id, status, created_at) VALUES (?, ?, ?)`,
+      [user_id, status, created_at], function (err) {
         if (err) {
           return callback(err);
         }
@@ -14,7 +14,7 @@ class RideModel {
   }
 
   static cancel(id, callback) {
-    db.run(`UPDATE rides SET status = ? WHERE id = ?`, ['canceled', id], function(err) {
+    run(`UPDATE rides SET status = ? WHERE id = ?`, ['canceled', id], function (err) {
       if (err) {
         return callback(err);
       }
@@ -23,14 +23,13 @@ class RideModel {
   }
 
   static getAll(callback) {
-    db.all(`SELECT * FROM rides`, [], (err, rows) => {
-    if (err) {
-    return callback(err);
-    }
-    callback(null, rows);
+    all(`SELECT * FROM rides`, [], (err, rows) => {
+      if (err) {
+        return callback(err);
+      }
+      callback(null, rows);
     });
-    }
-    }
+  }
+}
 
-
-module.exports = RideModel;
+export default RideModel;

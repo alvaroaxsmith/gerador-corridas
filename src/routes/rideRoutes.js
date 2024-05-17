@@ -1,10 +1,10 @@
-const express = require('express');
-const RideController = require('../controllers/rideController');
+import express from 'express';
+import RideController from '../controllers/rideController.js';
 
 const router = express.Router();
 
-router.post('/', RideController.create);
-router.delete('/:id', RideController.cancel);
-router.get('/get', RideController.getAll);
+router.post('/create', RideController.create);
+router.post('/cancel/:id', RideController.cancel);
+router.get('/', RideController.getAll);
 
-module.exports = router;
+export default router;
