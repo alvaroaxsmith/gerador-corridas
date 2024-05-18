@@ -114,4 +114,41 @@ router.post('/cancel/:id', RideController.cancel);
  */
 router.get('/', RideController.getAll);
 
+/**
+ * @swagger
+ * /rides/login:
+ *   post:
+ *     summary: Login de usuário.
+ *     description: Obtém o user_id associado ao e-mail fornecido.
+ *     tags: [Rides]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: E-mail do usuário.
+ *             example:
+ *               email: user@example.com
+ *     responses:
+ *       '200':
+ *         description: User_id obtido com sucesso.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user_id:
+ *                   type: string
+ *                   description: ID do usuário associado ao e-mail.
+ *       '404':
+ *         description: E-mail não encontrado.
+ *       '500':
+ *         description: Erro durante o login.
+ */
+router.post('/login', RideController.login);
+
 export default router;

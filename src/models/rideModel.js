@@ -30,6 +30,18 @@ class RideModel {
       callback(null, rows);
     });
   }
+
+  static getUserIdByEmail(email, callback) {
+    all(`SELECT user_id FROM users WHERE email = ?`, [email], (err, rows) => {
+      if (err) {
+        return callback(err);
+      }
+      if (rows.length === 0) {
+        return callback(new Error('E-mail não encontrado'));
+      }
+      callback(null, rows[0].user_id);
+    });
+  }  
 }
 
 export default RideModel;
