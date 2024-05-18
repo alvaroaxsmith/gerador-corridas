@@ -8,7 +8,13 @@ db.serialize(() => {
     user_id TEXT,
     status TEXT,
     created_at TEXT
-  )`);
+  )`, (err) => {
+    if (err) {
+      console.error('Erro ao criar a tabela:', err.message);
+    } else {
+      console.log('Tabela de corridas criada com sucesso.');
+    }
+  });
 });
 
 export const run = (sql, params, callback) => db.run(sql, params, callback);
