@@ -3,6 +3,8 @@ import swaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: './.env' });
+const API = process.env.API_BASE_URL
+const NODE_ENV = process.env.NODE_ENV
 
 const options = {
     definition: {
@@ -12,8 +14,8 @@ const options = {
             version: '1.0.0',
         },
         servers: [{
-            url: process.env.NODE_ENV === 'production' ? process.env.API_BASE_URL : 'http://localhost:3000',
-            description: process.env.NODE_ENV === 'production' ? 'Servidor de Produção' : 'Servidor de Desenvolvimento',
+            url: NODE_ENV === 'production' ? API : 'http://localhost:3000',
+            description: NODE_ENV === 'production' ? 'Servidor de Produção' : 'Servidor de Desenvolvimento',
         }, ],
         components: {
             securitySchemes: {
