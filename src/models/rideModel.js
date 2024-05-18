@@ -1,4 +1,5 @@
 import { run, all } from '../config.js';
+import bcrypt from 'bcrypt';
 
 class RideModel {
   static create(user_id, callback) {
@@ -31,17 +32,32 @@ class RideModel {
     });
   }
 
-  static getUserIdByEmail(email, callback) {
-    all(`SELECT user_id FROM users WHERE email = ?`, [email], (err, rows) => {
+  static createUser(email, password, callback) {
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    run(`INSERT INTO users (email, password) VALUES (?, ?)`,
+      [email, hashedPassword], function (err) {
+        if (err) {
+          return callback(err);
+        }
+        callback(null, { id: this.lastID, email });
+      });
+  }
+
+  static findUserByEmail(email, callback) {
+    all(`SELECT * FROM users WHERE email = ?`, [email], (err, rows) => {
       if (err) {
         return callback(err);
       }
       if (rows.length === 0) {
         return callback(new Error('E-mail não encontrado'));
       }
-      callback(null, rows[0].user_id);
+      callback(null, rows[0]);
     });
-  }  
+  }
+
+  static comparePassword(password, hashedPassword) {
+    return bcrypt.compareSync(password, hashedPassword);
+  }
 }
 
 export default RideModel;
