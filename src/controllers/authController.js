@@ -4,7 +4,6 @@ import RideModel from '../models/rideModel.js';
 
 dotenv.config({ path: './.env' });
 const JWT_SECRET = process.env.JWT_SECRET;
-console.log("JWT_SECRET:", JWT_SECRET);
 
 class AuthController {
   static async register(req, res) {
