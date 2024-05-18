@@ -33,15 +33,4 @@ const getAllRides = () => {
   });
 };
 
-const getUserIdByEmail = (email) => {
-  return new Promise((resolve, reject) => {
-    RideModel.getUserIdByEmail(email, (err, userId) => {
-      if (err) {
-        return reject(err);
-      }
-      resolve(userId);
-    });
-  });
-};
-
-export { createRide, cancelRide, getAllRides, getUserIdByEmail };
+export { createRide, cancelRide, getAllRides };
