@@ -3,12 +3,16 @@ import setupSwagger from './src/swagger.js';
 import rideRoutes from './src/routes/rideRoutes.js';
 
 const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(express.json());
 
 app.use('/rides', rideRoutes);
 
 setupSwagger(app);
 
-const port = process.env.PORT || 3000;
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+  console.log(`Servidor rodando em http://localhost:${port}`);
 });
+
+export default app;
