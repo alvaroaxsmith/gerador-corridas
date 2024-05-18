@@ -1,43 +1,40 @@
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import dotenv from 'dotenv';
 
-const swaggerDefinition = {
-  openapi: '3.0.0',
-  info: {
-    title: 'API de Corridas',
-    version: '1.0.0',
-    description: 'API para gerenciamento de corridas com autenticação JWT',
-  },
-  servers: [
-    {
-      url: 'http://localhost:3000',
-      description: 'Servidor de desenvolvimento',
-    },
-  ],
-  components: {
-    securitySchemes: {
-      bearerAuth: {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-      },
-    },
-  },
-  security: [
-    {
-      bearerAuth: [],
-    },
-  ],
-  basePath: '/',
-};
+dotenv.config({ path: './.env' });
 
 const options = {
-  swaggerDefinition,
-  apis: ['./src/routes/rideRoutes.js'],
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'API de Corridas',
+            version: '1.0.0',
+        },
+        servers: [{
+            url: process.env.NODE_ENV === 'production' ? process.env.API_BASE_URL : 'http://localhost:3000',
+            description: process.env.NODE_ENV === 'production' ? 'Servidor de Produção' : 'Servidor de Desenvolvimento',
+        }, ],
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                },
+            },
+        },
+        security: [{
+            bearerAuth: []
+        }],
+    },
+    apis: ['./src/routes/*.js'],
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+const specs = swaggerJSDoc(options);
 
-export default function setupSwagger(app) {
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-}
+const setupSwagger = (app) => {
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+};
+
+export default setupSwagger;
