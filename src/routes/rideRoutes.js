@@ -1,5 +1,6 @@
 import express from 'express';
 import RideController from '../controllers/rideController.js';
+import AuthController from '../controllers/authController.js';
 
 const router = express.Router();
 
@@ -12,11 +13,79 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /rides/register:
+ *   post:
+ *     summary: Registra um novo usuário.
+ *     description: Cria um novo usuário com base no e-mail e senha fornecidos.
+ *     tags: [Rides]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: E-mail do usuário.
+ *               password:
+ *                 type: string
+ *                 description: Senha do usuário.
+ *     responses:
+ *       '201':
+ *         description: Usuário criado com sucesso.
+ *       '500':
+ *         description: Erro no servidor.
+ */
+router.post('/register', AuthController.register);
+
+/**
+ * @swagger
+ * /rides/login:
+ *   post:
+ *     summary: Login de usuário.
+ *     description: Autentica o usuário e retorna um token JWT.
+ *     tags: [Rides]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: E-mail do usuário.
+ *               password:
+ *                 type: string
+ *                 description: Senha do usuário.
+ *     responses:
+ *       '200':
+ *         description: Login bem-sucedido.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: Token JWT.
+ *       '401':
+ *         description: E-mail ou senha inválidos.
+ *       '500':
+ *         description: Erro no servidor.
+ */
+router.post('/login', AuthController.login);
+
+/**
+ * @swagger
  * /rides/create:
  *   post:
  *     summary: Cria uma nova corrida.
  *     description: Cria uma nova corrida com base no ID do usuário fornecido.
  *     tags: [Rides]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -47,8 +116,10 @@ const router = express.Router();
  *                 created_at:
  *                   type: string
  *                   description: Data de criação da corrida.
+ *       '401':
+ *         description: Acesso não autorizado.
  */
-router.post('/create', RideController.create);
+router.post('/create', AuthController.authenticate, RideController.create);
 
 /**
  * @swagger
@@ -57,6 +128,8 @@ router.post('/create', RideController.create);
  *     summary: Cancela uma corrida.
  *     description: Cancela a corrida com o ID especificado.
  *     tags: [Rides]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -79,8 +152,10 @@ router.post('/create', RideController.create);
  *                 status:
  *                   type: string
  *                   description: Novo status da corrida (canceled).
+ *       '401':
+ *         description: Acesso não autorizado.
  */
-router.post('/cancel/:id', RideController.cancel);
+router.post('/cancel/:id', AuthController.authenticate, RideController.cancel);
 
 /**
  * @swagger
@@ -89,6 +164,8 @@ router.post('/cancel/:id', RideController.cancel);
  *     summary: Obtém todas as corridas.
  *     description: Obtém uma lista de todas as corridas.
  *     tags: [Rides]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       '200':
  *         description: Lista de todas as corridas.
@@ -111,44 +188,9 @@ router.post('/cancel/:id', RideController.cancel);
  *                   created_at:
  *                     type: string
  *                     description: Data de criação da corrida.
+ *       '401':
+ *         description: Acesso não autorizado.
  */
-router.get('/', RideController.getAll);
-
-/**
- * @swagger
- * /rides/login:
- *   post:
- *     summary: Login de usuário.
- *     description: Obtém o user_id associado ao e-mail fornecido.
- *     tags: [Rides]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               email:
- *                 type: string
- *                 description: E-mail do usuário.
- *             example:
- *               email: user@example.com
- *     responses:
- *       '200':
- *         description: User_id obtido com sucesso.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 user_id:
- *                   type: string
- *                   description: ID do usuário associado ao e-mail.
- *       '404':
- *         description: E-mail não encontrado.
- *       '500':
- *         description: Erro durante o login.
- */
-router.post('/login', RideController.login);
+router.get('/', AuthController.authenticate, RideController.getAll);
 
 export default router;
